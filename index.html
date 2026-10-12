@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>花田待办</title>
+  <meta name="description" content="治愈系花田风待办清单，把今天种进花田里">
+  <meta name="theme-color" content="#f2c14e">
+  <link rel="manifest" href="manifest.json">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="花田待办">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- 背景层：花田照片 + 游走的光 + 飘落的花瓣 -->
+  <div class="bg" aria-hidden="true">
+    <div class="bg-photo"></div>
+    <div class="bg-glow"></div>
+    <div class="petals">
+      <span></span><span></span><span></span><span></span><span></span>
+      <span></span><span></span><span></span><span></span><span></span>
+    </div>
+  </div>
+
+  <main class="app">
+    <header>
+      <h1>花田待办</h1>
+      <p class="subtitle">把今天种进花田里 🌼</p>
+    </header>
+
+    <form id="add-form" class="add-card">
+      <input id="todo-input" type="text" placeholder="写下要做的事…" maxlength="100" autocomplete="off">
+      <button type="submit">种下 🌱</button>
+    </form>
+
+    <nav class="filters">
+      <button type="button" data-filter="all" class="active">全部</button>
+      <button type="button" data-filter="active">待完成</button>
+      <button type="button" data-filter="done">已完成</button>
+    </nav>
+
+    <p id="counter" class="counter"></p>
+    <ul id="todo-list"></ul>
+    <p id="empty-tip" class="empty-tip">花田空空的，种下第一颗种子吧 🌱</p>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,186 @@
+/* 花田待办 · 治愈系花田风 */
+:root {
+  --cream: #fffdf6;
+  --ink: #4a4234;
+  --ink-soft: #8a7d63;
+  --sun: #f5b942;
+  --sun-deep: #e89b2d;
+  --leaf: #7ba05b;
+  --card: rgba(255, 253, 246, 0.85);
+  --line: rgba(122, 100, 60, 0.14);
+}
+
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+body {
+  margin: 0;
+  font-family: -apple-system, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  color: var(--ink);
+  min-height: 100vh;
+  min-height: 100dvh;
+  touch-action: manipulation; /* 去掉移动端点击延迟 */
+}
+
+/* ---------- 背景层 ---------- */
+.bg { position: fixed; inset: 0; z-index: -1; overflow: hidden; }
+
+.bg-photo {
+  position: absolute; inset: -4%;
+  background: url("images/bg.jpg") center / cover no-repeat,
+              linear-gradient(180deg, #fdeec2, #e8f3d8);
+  animation: breathe 14s ease-in-out infinite alternate;
+}
+@keyframes breathe {
+  from { transform: scale(1); }
+  to   { transform: scale(1.06); }
+}
+
+.bg-glow {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(40vmax 40vmax at 20% 15%, rgba(255, 236, 170, 0.55), transparent 60%),
+    radial-gradient(36vmax 36vmax at 85% 80%, rgba(255, 255, 255, 0.35), transparent 60%);
+  animation: wander 18s ease-in-out infinite alternate;
+}
+@keyframes wander {
+  from { transform: translate3d(-2%, -1%, 0); }
+  to   { transform: translate3d(2%, 2%, 0); }
+}
+
+/* 顶部一层柔光，保证文字清晰 */
+.bg::after {
+  content: "";
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg,
+    rgba(255, 253, 246, 0.55),
+    rgba(255, 253, 246, 0.15) 40%,
+    rgba(255, 253, 246, 0.35));
+}
+
+.petals span {
+  position: absolute; top: -4vmax;
+  width: 1.6vmax; height: 1.6vmax;
+  border-radius: 60% 0 60% 0;
+  background: rgba(255, 214, 130, 0.8);
+  opacity: 0;
+  animation: fall linear infinite;
+}
+@keyframes fall {
+  0%   { transform: translateY(-5vh) rotate(0deg); opacity: 0; }
+  10%  { opacity: 0.9; }
+  90%  { opacity: 0.7; }
+  100% { transform: translateY(108vh) rotate(340deg); opacity: 0; }
+}
+.petals span:nth-child(1)  { left: 6%;  animation-duration: 12s; animation-delay: 0s; }
+.petals span:nth-child(2)  { left: 18%; animation-duration: 9s;  animation-delay: 2s; }
+.petals span:nth-child(3)  { left: 29%; animation-duration: 14s; animation-delay: 5s; }
+.petals span:nth-child(4)  { left: 41%; animation-duration: 10s; animation-delay: 1s; }
+.petals span:nth-child(5)  { left: 53%; animation-duration: 13s; animation-delay: 4s; }
+.petals span:nth-child(6)  { left: 64%; animation-duration: 11s; animation-delay: 3s; }
+.petals span:nth-child(7)  { left: 74%; animation-duration: 15s; animation-delay: 6s; }
+.petals span:nth-child(8)  { left: 84%; animation-duration: 9s;  animation-delay: 2.5s; }
+.petals span:nth-child(9)  { left: 92%; animation-duration: 12s; animation-delay: 7s; }
+.petals span:nth-child(10) { left: 36%; animation-duration: 10s; animation-delay: 8s; }
+
+/* ---------- 内容 ---------- */
+.app {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: max(20px, env(safe-area-inset-top)) 18px 40px;
+}
+
+header h1 { font-size: 28px; margin: 26px 0 4px; letter-spacing: 3px; }
+.subtitle { color: var(--ink-soft); margin: 0 0 18px; font-size: 14px; }
+
+.add-card {
+  display: flex; gap: 10px;
+  background: var(--card);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  padding: 12px;
+  border-radius: 20px;
+  border: 1px solid var(--line);
+  box-shadow: 0 8px 24px rgba(150, 110, 40, 0.12);
+}
+.add-card input {
+  flex: 1; border: none; background: transparent;
+  font-size: 16px; padding: 10px 6px;
+  color: var(--ink); outline: none; min-width: 0;
+}
+.add-card button {
+  border: none; border-radius: 14px;
+  padding: 0 18px; font-size: 15px; color: #fff;
+  background: linear-gradient(135deg, var(--sun), var(--sun-deep));
+  box-shadow: 0 4px 12px rgba(232, 155, 45, 0.35);
+  transition: transform 0.12s;
+}
+.add-card button:active { transform: scale(0.96); }
+
+.filters { display: flex; gap: 8px; margin: 16px 0 6px; }
+.filters button {
+  flex: 1; padding: 9px 0; font-size: 14px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--card);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: var(--ink-soft);
+  transition: all 0.15s;
+}
+.filters button.active { background: var(--ink); color: var(--cream); border-color: transparent; }
+
+.counter { font-size: 13px; color: var(--ink-soft); margin: 10px 2px; min-height: 18px; }
+
+#todo-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+
+.todo {
+  display: flex; align-items: center; gap: 12px;
+  background: var(--card);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 13px 14px;
+  box-shadow: 0 6px 18px rgba(150, 110, 40, 0.10);
+  animation: sprout 0.22s ease-out;
+}
+@keyframes sprout {
+  from { opacity: 0; transform: translateY(8px) scale(0.98); }
+}
+
+.check {
+  width: 26px; height: 26px; flex: none;
+  border-radius: 50%;
+  border: 2px solid #d8c48f;
+  background: #fff;
+  display: grid; place-items: center;
+  font-size: 15px; color: #fff;
+  transition: all 0.15s;
+}
+.check:active { transform: scale(0.88); }
+.todo.done .check { background: var(--leaf); border-color: var(--leaf); }
+
+.todo .text { flex: 1; font-size: 16px; min-width: 0; overflow-wrap: anywhere; }
+.todo.done .text { text-decoration: line-through; color: var(--ink-soft); }
+
+.icon-btn {
+  border: none; background: transparent;
+  font-size: 16px; padding: 8px; margin: -8px;
+  color: var(--ink-soft);
+  transition: transform 0.12s;
+}
+.icon-btn:active { transform: scale(0.88); }
+
+.edit-input {
+  flex: 1; min-width: 0;
+  font-size: 16px; color: var(--ink);
+  border: 1px solid var(--sun); border-radius: 10px;
+  padding: 6px 8px; outline: none; background: #fff;
+}
+
+.empty-tip { text-align: center; color: var(--ink-soft); font-size: 14px; margin-top: 26px; }
+
+/* 尊重系统的"减少动态效果"设置 */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
