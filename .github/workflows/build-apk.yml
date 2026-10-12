@@ -1,0 +1,62 @@
+name: 打包安卓 APK
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - uses: android-actions/setup-android@v3
+
+      - name: 安装 Capacitor
+        run: npm install @capacitor/core @capacitor/cli @capacitor/android
+
+      - name: 初始化套壳工程
+        run: npx cap init "花田待办" com.xiaochu.flowertodo --web-dir=.
+
+      - name: 添加安卓平台
+        run: npx cap add android
+
+      - name: 用 SVG 生成启动图标
+        run: |
+          pip install cairosvg pillow
+          python3 << 'EOF'
+          import cairosvg, io, os
+          from PIL import Image
+          svg = open('icons/icon.svg', 'rb').read()
+          sizes = {'mipmap-mdpi': 48, 'mipmap-hdpi': 72, 'mipmap-xhdpi': 96,
+                   'mipmap-xxhdpi': 144, 'mipmap-xxxhdpi': 192}
+          for folder, px in sizes.items():
+              png = cairosvg.svg2png(bytestring=svg, output_width=px, output_height=px)
+              img = Image.open(io.BytesIO(png))
+              d = os.path.join('android/app/src/main/res', folder)
+              img.save(os.path.join(d, 'ic_launcher.png'))
+              img.save(os.path.join(d, 'ic_launcher_round.png'))
+              print('icon done:', folder, px)
+          EOF
+
+      - name: 编译 APK
+        run: |
+          cd android
+          chmod +x gradlew
+          ./gradlew assembleDebug
+
+      - name: 上传 APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: flower-todo-apk
+          path: android/app/build/outputs/apk/debug/app-debug.apk
